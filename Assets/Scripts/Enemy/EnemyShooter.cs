@@ -12,10 +12,7 @@ public class EnemyShooter : Shooter
 
     private void Update()
     {
-        if (IsCanShoot)
-        {
-            Shoot(-transform.right);
-        }
+        Shoot(-transform.right);
     }
 
 }

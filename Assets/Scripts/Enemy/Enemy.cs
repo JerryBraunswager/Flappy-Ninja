@@ -6,6 +6,8 @@ public class Enemy : Poolable
 {
     private EnemyShooter _shooter;
 
+    public event Action<Enemy> Died;
+
     private void Awake()
     {
         _shooter = GetComponent<EnemyShooter>();
@@ -19,7 +21,7 @@ public class Enemy : Poolable
         {
             if(projectile.Owner != _shooter) 
             { 
-                projectile.Owner.ShootAbility.ProjectilePool.PutObject(projectile);
+                projectile.Pool.PutObject(projectile);
                 isDead = true;
             }
         }
@@ -30,5 +32,4 @@ public class Enemy : Poolable
         }
     }
 
-    public event Action<Enemy> Died;
 }

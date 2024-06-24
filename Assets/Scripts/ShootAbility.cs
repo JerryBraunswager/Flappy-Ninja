@@ -16,14 +16,9 @@ public class ShootAbility : MonoBehaviour
 
     public void SpawnProjectile(Vector3 direction, Shooter shooter)
     {
-        if(direction == null)
-        {
-            return;
-        }
-
-        var projectile = _projectilePool.GetObject();
+        var projectile = _projectilePool.GetObject(out bool newProjectile);
         projectile.gameObject.SetActive(true);
         projectile.transform.position = _shootPoint.position;
-        projectile.Init(direction, shooter);
+        projectile.Init(direction, shooter, _projectilePool);
     }
 }

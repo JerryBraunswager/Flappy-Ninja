@@ -152,12 +152,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa7eba6969e65744ea47a75f142d88e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _startDelay: 5
-  _timeToChangeDelay: 1
-  _amountOfChange: 0.5
+  _startDelay: 7
+  _timeToChangeDelay: 2
+  _amountOfChange: 0.2
   _lowerBound: -4
   _upperBound: 4
   _pool: {fileID: 1436782518}
+  _projectilePool: {fileID: 1053668937}
+  _endGameScreen: {fileID: 2091298834}
 --- !u!4 &112972366
 Transform:
   m_ObjectHideFlags: 0
@@ -1919,10 +1921,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1645605549334723512, guid: ac58bb1b558eb8d44b088b6527806806, type: 3}
-      propertyPath: m_Constraints
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 2262830185926604240, guid: ac58bb1b558eb8d44b088b6527806806, type: 3}
       propertyPath: m_LocalPosition.x
       value: -7

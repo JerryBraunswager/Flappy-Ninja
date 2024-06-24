@@ -22,15 +22,14 @@ public class Shooter : MonoBehaviour
         StartCoroutine(ReloadShootAbility());
     }
 
-    public ShootAbility ShootAbility => _shooter;
-
-    protected bool IsCanShoot => _isCanShoot;
-
     protected void Shoot(Vector3 direction)
     {
-        _shooter.SpawnProjectile(direction, this);
-        _isCanShoot = false;
-        StartCoroutine(ReloadShootAbility());
+        if (_isCanShoot)
+        {
+            _shooter.SpawnProjectile(direction, this);
+            _isCanShoot = false;
+            StartCoroutine(ReloadShootAbility());
+        }
     }
 
     protected IEnumerator ReloadShootAbility()

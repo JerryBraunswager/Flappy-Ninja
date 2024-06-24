@@ -7,16 +7,19 @@ public class Projectile : Poolable
 
     private Rigidbody2D _rigidbody2D;
     private Shooter _owner;
+    private ProjectilePool _pool;
+
+    public Shooter Owner => _owner;
+    public ProjectilePool Pool => _pool;
 
     private void Awake()
     {
         _rigidbody2D = GetComponent<Rigidbody2D>();
     }
 
-    public Shooter Owner => _owner;
-
-    public void Init(Vector3 direction, Shooter shooter)
+    public void Init(Vector3 direction, Shooter shooter, ProjectilePool projectilePool)
     {
+        _pool = projectilePool;
         _owner = shooter;
         _rigidbody2D.velocity = direction * _speed;
     }
@@ -25,7 +28,7 @@ public class Projectile : Poolable
     {
         if(collision.transform.TryGetComponent(out Projectile projectile))
         {
-            _owner.ShootAbility.ProjectilePool.PutObject(this);
+            Pool.PutObject(this);
         }
     }
 }

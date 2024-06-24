@@ -8,12 +8,9 @@ public class NinjaShooter : Shooter
 
     private void Update()
     {
-        if(IsCanShoot)
+        if (Input.GetKeyDown(_shootKey))
         {
-            if (Input.GetKeyDown(_shootKey))
-            {
-                Shoot(transform.right);
-            }
+            Shoot(transform.right);
         }
     }
 }

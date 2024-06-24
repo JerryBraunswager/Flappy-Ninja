@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEditor.SearchService;
 using UnityEngine;
 
@@ -10,9 +11,12 @@ public class EnemyGenerator : MonoBehaviour
     [SerializeField] private float _lowerBound;
     [SerializeField] private float _upperBound;
     [SerializeField] private EnemyPool _pool;
+    [SerializeField] private ProjectilePool _projectilePool;
+    [SerializeField] private EndGameScreen _endGameScreen;
 
     private float _delay;
     private WaitForSeconds _sleepTime;
+    private List<Enemy> _enemyList = new List<Enemy>();
 
     private void Start()
     {
@@ -21,15 +25,32 @@ public class EnemyGenerator : MonoBehaviour
         StartCoroutine(SpawnEnemies());
         StartCoroutine(ChangeDelay());
     }
+    private void OnEnable()
+    {
+        _endGameScreen.RestartButtonClicked += RestartGame;
+    }
+
+    private void OnDisable()
+    {
+        _endGameScreen.RestartButtonClicked -= RestartGame;
+
+        foreach (Enemy enemy in _enemyList) 
+        { 
+            enemy.Died -= DeactivateEnemy;
+        }
+    }
+
+    private void RestartGame()
+    {
+        _delay = _startDelay;
+    }
 
     private IEnumerator SpawnEnemies()
     {
-        var wait = new WaitForSeconds(_delay);
-
         while (enabled) 
         {
             Spawn();
-            yield return wait;
+            yield return new WaitForSeconds(_delay);
         }
     }
 
@@ -39,6 +60,7 @@ public class EnemyGenerator : MonoBehaviour
         {
             yield return _sleepTime;
             _delay -= _amountOfChange;
+            _delay = Mathf.Clamp(_delay, 0, _startDelay);
         }
     }
 
@@ -46,13 +68,18 @@ public class EnemyGenerator : MonoBehaviour
     {
         float spawnPositionY = Random.Range(_upperBound, _lowerBound);
         Vector3 spawnPoint = new Vector3(transform.position.x, spawnPositionY, transform.position.z);
+        bool newEnemy;
+        var enemy = _pool.GetObject(out newEnemy);
 
-        var enemy = _pool.GetObject();
-        enemy.Died += DeactivateEnemy;
+        if (newEnemy)
+        {
+            enemy.Died += DeactivateEnemy;
+            _enemyList.Add(enemy);
+        }
 
         if(enemy.TryGetComponent(out ShootAbility component))
         {
-            component.Init(FindAnyObjectByType<ProjectilePool>());
+            component.Init(_projectilePool);
         }
 
         enemy.gameObject.SetActive(true);
