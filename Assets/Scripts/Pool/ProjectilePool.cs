@@ -9,6 +9,11 @@ public class ProjectilePool : Pool<Projectile>
         _endGameScreen.RestartButtonClicked += DisableAlProjectiles;
     }
 
+    private void OnDisable()
+    {
+        _endGameScreen.RestartButtonClicked -= DisableAlProjectiles;
+    }
+
     private void DisableAlProjectiles()
     {
         for(int i = 0; i < transform.childCount; i++) 

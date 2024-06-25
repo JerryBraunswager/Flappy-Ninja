@@ -2,15 +2,19 @@ using System;
 using UnityEngine;
 
 [RequireComponent(typeof(EnemyShooter))]
+[RequireComponent(typeof(ShootAbility))]
 public class Enemy : Poolable
 {
-    private EnemyShooter _shooter;
-
     public event Action<Enemy> Died;
+
+    public EnemyShooter Shooter { get; private set; }
+
+    public ShootAbility ShootAbility { get; private set; }
 
     private void Awake()
     {
-        _shooter = GetComponent<EnemyShooter>();
+        Shooter = GetComponent<EnemyShooter>();
+        ShootAbility = GetComponent<ShootAbility>();
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -19,9 +23,8 @@ public class Enemy : Poolable
 
         if(collision.transform.TryGetComponent(out Projectile projectile))
         {
-            if(projectile.Owner != _shooter) 
-            { 
-                projectile.Pool.PutObject(projectile);
+            if(projectile.Owner != Shooter) 
+            {
                 isDead = true;
             }
         }

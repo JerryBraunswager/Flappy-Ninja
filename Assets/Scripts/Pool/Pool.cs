@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -14,15 +15,12 @@ public class Pool<T> : MonoBehaviour where T : Poolable
         _pool = new Queue<T>();
     }
 
-    public T GetObject(out bool newObject)
+    public T GetObject()
     {
-        newObject = false;
-
         if (_pool.Count == 0)
         {
             var poolable = Instantiate(_prefab);
             poolable.transform.parent = transform;
-            newObject = true;
             return poolable;
         }
 

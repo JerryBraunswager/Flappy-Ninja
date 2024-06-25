@@ -68,20 +68,10 @@ public class EnemyGenerator : MonoBehaviour
     {
         float spawnPositionY = Random.Range(_upperBound, _lowerBound);
         Vector3 spawnPoint = new Vector3(transform.position.x, spawnPositionY, transform.position.z);
-        bool newEnemy;
-        var enemy = _pool.GetObject(out newEnemy);
-
-        if (newEnemy)
-        {
-            enemy.Died += DeactivateEnemy;
-            _enemyList.Add(enemy);
-        }
-
-        if(enemy.TryGetComponent(out ShootAbility component))
-        {
-            component.Init(_projectilePool);
-        }
-
+        var enemy = _pool.GetObject();
+        enemy.ShootAbility.Init(_projectilePool);
+        enemy.Died += DeactivateEnemy;
+        _enemyList.Add(enemy);
         enemy.gameObject.SetActive(true);
         enemy.transform.position = spawnPoint;
     }
@@ -89,5 +79,7 @@ public class EnemyGenerator : MonoBehaviour
     private void DeactivateEnemy(Enemy enemy)
     {
         _pool.PutObject(enemy);
+        enemy.Died -= DeactivateEnemy;
+        _enemyList.Remove(enemy);
     }
 }

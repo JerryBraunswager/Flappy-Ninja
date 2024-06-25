@@ -1,40 +1,43 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(ShootAbility))]
 public class Shooter : MonoBehaviour
 {
     [SerializeField] private float _sleepTime;
 
-    private ShootAbility _shooter;
+    private ShootAbility _shootAbility;
     private WaitForSeconds _sleep;
-    private bool _isCanShoot;
+
+    public bool IsCanShoot { get; private set; }
 
     private void Awake()
     {
-        _shooter = GetComponent<ShootAbility>();
+        _shootAbility = GetComponent<ShootAbility>();
     }
 
     private void Start()
     {
-        _isCanShoot = false;
+        IsCanShoot = false;
         _sleep = new WaitForSeconds(_sleepTime);
         StartCoroutine(ReloadShootAbility());
     }
 
     protected void Shoot(Vector3 direction)
     {
-        if (_isCanShoot)
+        if (IsCanShoot == false)
         {
-            _shooter.SpawnProjectile(direction, this);
-            _isCanShoot = false;
-            StartCoroutine(ReloadShootAbility());
+            return;
         }
+
+        _shootAbility.SpawnProjectile(direction, this);
+        IsCanShoot = false;
+        StartCoroutine(ReloadShootAbility());
     }
 
     protected IEnumerator ReloadShootAbility()
     {
         yield return _sleep;
-        _isCanShoot = true;
+        IsCanShoot = true;
     }
 }

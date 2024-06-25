@@ -7,8 +7,6 @@ public class ShootAbility : MonoBehaviour
     
     private ProjectilePool _projectilePool;
 
-    public ProjectilePool ProjectilePool => _projectilePool;
-
     public void Init(ProjectilePool projectilePool)
     {
         _projectilePool = projectilePool;
@@ -16,9 +14,16 @@ public class ShootAbility : MonoBehaviour
 
     public void SpawnProjectile(Vector3 direction, Shooter shooter)
     {
-        var projectile = _projectilePool.GetObject(out bool newProjectile);
+        var projectile = _projectilePool.GetObject();
+        projectile.Destroyed += PutProjectile;
         projectile.gameObject.SetActive(true);
         projectile.transform.position = _shootPoint.position;
-        projectile.Init(direction, shooter, _projectilePool);
+        projectile.Init(direction, shooter);
+    }
+
+    private void PutProjectile(Projectile projectile)
+    {
+        _projectilePool.PutObject(projectile);
+        projectile.Destroyed -= PutProjectile;
     }
 }
